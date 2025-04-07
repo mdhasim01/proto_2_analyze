@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction - Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .stock-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .stock-symbol {
+            color: #666;
+        }
+        .current-price {
+            font-size: 1.2em;
+            text-align: right;
+        }
+        .current-price-value {
+            font-weight: bold;
+            color: #000;
+        }
+        .prediction-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .prediction-header {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .prediction-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .confidence-interval {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+        .change-indicator {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .positive-change {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .negative-change {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .metadata {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
+            text-align: right;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #337ab7;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="stock-header">
+            <div>
+                <div class="stock-name">{{ result.name }}</div>
+                <div class="stock-symbol">{{ result.symbol }}</div>
+            </div>
+            <div class="current-price">
+                Current Price: <span class="current-price-value">₹{{ result.current_price }}</span>
+            </div>
+        </div>
+
+        <div class="prediction-section">
+            <h2 class="prediction-header">Price Prediction</h2>
+            <div class="prediction-detail">
+                <span>Timeframe:</span>
+                <span>{{ result.prediction.timeframe }}</span>
+            </div>
+            <div class="prediction-detail">
+                <span>Target Date:</span>
+                <span>{{ result.prediction.target_date }}</span>
+            </div>
+            <div class="prediction-detail">
+                <span>Predicted Price:</span>
+                <span>
+                    ₹{{ result.prediction.predicted_price }}
+                    {% if result.prediction.change_percentage > 0 %}
+                    <span class="change-indicator positive-change">+{{ result.prediction.change_percentage }}%</span>
+                    {% else %}
+                    <span class="change-indicator negative-change">{{ result.prediction.change_percentage }}%</span>
+                    {% endif %}
+                </span>
+            </div>
+            
+            {% if result.prediction.confidence_interval %}
+            <div class="confidence-interval">
+                <div>Confidence Interval (95%):</div>
+                <div>Lower: ₹{{ result.prediction.confidence_interval.lower }} | Upper: ₹{{ result.prediction.confidence_interval.upper }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="metadata">
+            <div>Prediction generated: {{ result.metadata.prediction_created }}</div>
+            <div>Model: {{ result.metadata.model }}</div>
+        </div>
+
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

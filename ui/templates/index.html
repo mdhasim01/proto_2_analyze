@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction Platform - Indian Markets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="checkbox"] {
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        input[type="radio"] {
+            margin: 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-container input {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Prediction Platform</h1>
+        <p>This platform provides short-term and long-term forecasting specifically for the Indian stock market.</p>
+        
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="symbol">Select Stock or Index:</label>
+                <select id="symbol" name="symbol" required>
+                    <option value="" disabled selected>-- Select a stock or index --</option>
+                    {% for symbol in symbols %}
+                    <option value="{{ symbol.symbol }}">{{ symbol.symbol }} - {{ symbol.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Prediction Timeframe:</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="short_term" name="timeframe" value="short_term" checked>
+                        <label for="short_term">Short Term (7 days)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="medium_term" name="timeframe" value="medium_term">
+                        <label for="medium_term">Medium Term (30 days)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="long_term" name="timeframe" value="long_term">
+                        <label for="long_term">Long Term (90 days)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="include_confidence" name="include_confidence" checked>
+                    <label for="include_confidence">Include confidence intervals in prediction</label>
+                </div>
+            </div>
+            
+            <button type="submit">Generate Prediction</button>
+        </form>
+    </div>
+</body>
+</html>

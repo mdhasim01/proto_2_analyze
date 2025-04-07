@@ -1,0 +1,33 @@
+# Machine Learning Libraries
+numpy
+pandas
+scikit-learn
+torch
+
+# Data Visualization
+matplotlib
+seaborn
+plotly
+
+# API Integration
+requests
+pydantic
+fastapi
+
+# UI Framework
+flask
+jinja2
+streamlit
+
+# Stock Data and Technical Analysis
+yfinance
+pandas-ta
+
+# News and Sentiment Analysis
+newsapi-python
+textblob
+nltk
+
+# Other Utilities
+jupyter
+python-dateutil
