@@ -18,6 +18,7 @@ fastapi
 flask
 jinja2
 streamlit
+Werkzeug<3.0
 
 # Stock Data and Technical Analysis
 yfinance
