@@ -6,6 +6,8 @@ import random  # Just for generating mock data
 import os
 import json
 import logging
+from flask import Blueprint, jsonify, request # Added import
+from pydantic import ValidationError # Added import for validation error handling
 from .data_acquisition import StockDataFetcher
 from .models.data_models import (
     PredictionRequest, 
@@ -337,3 +339,73 @@ class ApiService:
         self.cache_prediction(prediction_response, timeframe)
         
         return prediction_response
+
+# Instantiate the service
+api_service = ApiService()
+
+# Create Flask Blueprint
+api_bp = Blueprint('api', __name__, url_prefix='/api')
+
+# Define API routes
+@api_bp.route('/status', methods=['GET'])
+def status():
+    """API status endpoint."""
+    status_info = api_service.get_api_status()
+    return jsonify(status_info.dict())
+
+@api_bp.route('/symbols', methods=['GET'])
+def list_symbols():
+    """Endpoint to get available stock symbols."""
+    symbols_list = api_service.get_available_symbols()
+    return jsonify(symbols_list.dict())
+
+@api_bp.route('/symbols/search', methods=['GET'])
+def search_symbols_route():
+    """Endpoint to search for stock symbols."""
+    query = request.args.get('q', '')
+    symbols_list = api_service.search_symbols(query)
+    return jsonify(symbols_list.dict())
+
+@api_bp.route('/stocks/<string:symbol>', methods=['GET'])
+def get_stock_data_route(symbol: str):
+    """Endpoint to get basic data for a specific stock symbol."""
+    try:
+        stock_data = api_service.get_stock_data(symbol)
+        return jsonify(stock_data)
+    except ValueError as e:
+        logger.error(f"Error fetching data for {symbol}: {e}")
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        logger.error(f"Unexpected error fetching data for {symbol}: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
+
+@api_bp.route('/predict', methods=['POST'])
+def predict_route():
+    """Endpoint to get stock price prediction."""
+    if not request.is_json:
+        return jsonify({"error": "Request must be JSON"}), 400
+
+    try:
+        req_data = request.get_json()
+        # Validate request data using Pydantic model
+        prediction_request = PredictionRequest(**req_data)
+        
+        # Call the predict method
+        prediction_response = api_service.predict(prediction_request)
+        
+        # Return the Pydantic model as a dictionary
+        return jsonify(prediction_response.dict())
+        
+    except ValidationError as e:
+        logger.error(f"Validation error during prediction: {e.errors()}")
+        # Return validation errors
+        return jsonify({"error": "Invalid request data", "details": e.errors()}), 400
+    except ValueError as e:
+        logger.error(f"Value error during prediction: {str(e)}")
+        # Handle errors like symbol not found
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        logger.error(f"Unexpected error during prediction: {str(e)}")
+        # Catch other potential errors
+        return jsonify({"error": "An unexpected error occurred during prediction"}), 500
