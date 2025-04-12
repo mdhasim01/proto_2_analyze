@@ -1,4 +1,4 @@
-# Stock Price Prediction Platform for Indian Markets
+git # Stock Price Prediction Platform for Indian Markets
 
 ## Project Overview
 This project aims to create a stock price prediction platform for the Indian stock market, covering both short-term and long-term forecasts. The platform leverages advanced machine learning algorithms to provide accurate predictions and effective data visualization.
